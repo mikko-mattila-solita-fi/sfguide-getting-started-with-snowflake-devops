@@ -70,7 +70,7 @@ create or alter task email_notification
       if (:options = '[]') then
         CALL SYSTEM$SEND_EMAIL(
             'email_integration',
-            '<insert your email here>', -- INSERT YOUR EMAIL HERE
+            'mikko.mattila@solita.fi', -- INSERT YOUR EMAIL HERE
             'New data successfully processed: No suitable vacation spots found.',
             'The query did not return any results. Consider adjusting your filters.');
       end if;
@@ -83,14 +83,14 @@ create or alter task email_notification
 
       CALL SYSTEM$SEND_EMAIL(
         'email_integration',
-        '<insert your email here>', -- INSERT YOUR EMAIL HERE
+        'mikko.mattila@solita.fi', -- INSERT YOUR EMAIL HERE
         'New data successfully processed: The perfect place for your summer vacation has been found.',
         :response);
     exception
         when EXPRESSION_ERROR then
             CALL SYSTEM$SEND_EMAIL(
             'email_integration',
-            '<insert your email here>', -- INSERT YOUR EMAIL HERE
+            'mikko.mattila@solita.fi', -- INSERT YOUR EMAIL HERE
             'New data successfully processed: Cortex LLM function inaccessible.',
             'It appears that the Cortex LLM functions are not available in your region');
     end;
@@ -99,6 +99,8 @@ create or alter task email_notification
 -- resume follow-up task so it is included in DAG runs
 -- don't resume the root task so the regular schedule doesn't get invoked
 alter task email_notification resume;
+
+
 
 
 -- manually initiate a full execution of the DAG
@@ -115,6 +117,7 @@ SHOW TASKS;
 SELECT *
 FROM TABLE(INFORMATION_SCHEMA.TASK_HISTORY(
     SCHEDULED_TIME_RANGE_START=>DATEADD('DAY',-1,CURRENT_TIMESTAMP()),
+    TASK_NAME => 'email_notification',
     RESULT_LIMIT => 100))
 ORDER BY SCHEDULED_TIME DESC;
 

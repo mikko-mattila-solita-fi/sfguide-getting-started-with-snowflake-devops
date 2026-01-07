@@ -1,8 +1,8 @@
 [connections.default]
 warehouse = "QUICKSTART_WH"
 role = "ACCOUNTADMIN"
-database = "QUICKSTART_COMMON"
-schema = "PUBLIC"
+database = "QUICKSTART_PROD"
+schema = "bronze"
 account = "SOLITA-SOLITA_TRAINING"
 user = "MIKKO.MATTILA@SOLITA.FI"
 authenticator = "externalbrowser"
